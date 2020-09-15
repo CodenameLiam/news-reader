@@ -6,8 +6,6 @@ WORKDIR /src/client
 
 RUN npm install
 
-RUN npm run-script build
-
 WORKDIR /src/server
 
 RUN npm install
