@@ -1,0 +1,139 @@
+.home {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+
+	.content {
+		height: 100%;
+		overflow: auto;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+	}
+
+	.auto-play {
+		right: 2rem;
+		top: 34px;
+		position: absolute;
+	}
+
+	.carousel-container {
+		height: 100%;
+		overflow: hidden;
+
+		@media screen and (max-height: 1280px) {
+			overflow: auto;
+		}
+
+		.button-container {
+			display: flex;
+			justify-content: center;
+			margin-bottom: 1rem;
+			position: relative;
+			width: 18rem;
+			margin: auto;
+			margin-bottom: 1rem;
+
+			svg {
+				position: absolute;
+				z-index: 1;
+				left: 20px;
+				top: 18px;
+			}
+		}
+
+		* {
+			outline: none;
+		}
+
+		.animated {
+			height: 48rem;
+			// overflow: hidden;
+		}
+
+		.carousel {
+			height: 100%;
+		}
+
+		.carousel__slider {
+			padding-left: 25%;
+			padding-right: 25%;
+			height: 100%;
+
+			@media screen and (max-width: 1000px) {
+				padding-left: 0%;
+				padding-right: 0%;
+			}
+		}
+
+		.carousel__slider-tray-wrapper {
+			height: 100%;
+		}
+
+		.carousel__slider-tray {
+			height: 100%;
+		}
+
+		li {
+			height: 100%;
+		}
+	}
+
+	.text {
+		margin: auto 0rem;
+	}
+
+	.input-fields {
+		display: flex;
+		justify-content: center;
+		// max-width: 50rem;
+		// justify-content: space-between;
+	}
+
+	.search {
+		margin-left: 2rem;
+		padding-top: 2rem;
+		display: flex;
+		justify-content: center;
+		// padding: 1rem;
+		.text {
+			margin-right: 1rem;
+		}
+		.MuiInputBase-root {
+			height: 100%;
+		}
+	}
+
+	.country-select {
+		margin-right: 2rem;
+		padding-top: 2rem;
+
+		display: flex;
+		justify-content: center;
+
+		.flag-select {
+			padding: 0rem;
+
+			button {
+				outline: none;
+			}
+
+			ul {
+				font-size: 14px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				border: 1px solid #dedede;
+				border-radius: 10px;
+				padding: 0.5rem;
+
+				li {
+					border-radius: 4px;
+					transition: all 0.2s;
+				}
+			}
+
+			.flag-select__option__label {
+				font-family: "Poppins", sans-serif;
+			}
+		}
+	}
+}

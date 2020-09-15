@@ -1,0 +1,72 @@
+.footer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	background-color: #dedede;
+
+	.timer {
+		display: flex;
+		justify-content: space-between;
+		padding-bottom: 1rem;
+		width: 100%;
+		max-width: 60rem;
+		margin: auto;
+
+		.progress-bar {
+			width: 80%;
+			margin: auto;
+			height: 30%;
+			border-radius: 10px;
+			border: 2px solid #1c1e26;
+		}
+
+		.progress-complete {
+			background-color: #1c1e26;
+			width: 0%;
+			height: 100%;
+			border-radius: 10rem;
+		}
+	}
+
+	.container {
+		display: flex;
+		justify-content: space-between;
+
+		// padding-top: 1rem;
+		margin: auto;
+		max-width: 60rem;
+		width: 100%;
+
+		svg {
+			display: block;
+			margin: auto 0rem;
+			&:hover {
+				cursor: pointer;
+			}
+		}
+
+		.previous,
+		.next {
+			margin: auto 0rem;
+			padding: 1rem 4rem;
+		}
+
+		.control-container {
+			margin: auto 0rem;
+			background-color: #1c1e26;
+			border-radius: 100rem;
+			width: 6rem;
+			height: 6rem;
+			display: flex;
+
+			svg {
+				margin: auto;
+			}
+
+			&:hover {
+				cursor: pointer;
+			}
+		}
+	}
+}

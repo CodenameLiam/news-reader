@@ -1,0 +1,21 @@
+{
+	"name": "news-reader",
+	"version": "1.0.0",
+	"description": "News Reader Application",
+	"main": "Server.js",
+	"scripts": {
+		"start": "node Server.js",
+		"server": "nodemon Server.js"
+	},
+	"author": "Liam Percy",
+	"license": "ISC",
+	"dependencies": {
+		"@google-cloud/text-to-speech": "^3.1.0",
+		"axios": "^0.20.0",
+		"express": "^4.17.1",
+		"uuid": "^8.3.0"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.4"
+	}
+}
