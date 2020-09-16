@@ -26,6 +26,8 @@
 		"react-flags-select": "^1.1.13",
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "3.4.3",
+		"react-toastify": "^6.0.8",
+		"reactjs-popup": "^2.0.3",
 		"typescript": "~3.7.2"
 	},
 	"scripts": {

@@ -7,6 +7,7 @@ export interface IArticle {
 	author: string;
 	imageURL: string;
 	published: any;
+	body?: string;
 }
 
 export default function Article(props: { article: IArticle }) {
@@ -28,6 +29,7 @@ export default function Article(props: { article: IArticle }) {
 					<div className="title">{title}</div>
 					<div className="description">{description}</div>
 				</div>
+
 				<div className="article-footer">
 					<div className="author">{author}</div>
 					<div className="published">{moment(published).format("ddd Do MMMM YYYY")}</div>

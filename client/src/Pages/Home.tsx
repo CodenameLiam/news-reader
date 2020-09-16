@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { Toggle } from "../Components/Toggle";
@@ -18,34 +18,56 @@ import { CarouselProvider, Slider, Slide } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
 
 import SearchIcon from "@material-ui/icons/Search";
-import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Gets articles from the server-side
 function useArticles(country: string, search: string) {
 	const [articles, setArticles] = useState<IArticle[]>([]);
 	useEffect(() => {
-		axios
-			.get(`./api/news/headlines?country=${country}${getSearch(search)}`)
-			.then((d) => setArticles(d.data))
-			.catch((e) => alert("Cloud not load articles"));
+		if (search) {
+			axios
+				.get(`./api/news/everything?search=${search}`)
+				.then((d) => setArticles(d.data))
+				.catch((e) => alert("Cloud not load articles"));
+		} else {
+			axios
+				.get(`./api/news/headlines?country=${country}${getSearch(search)}`)
+				.then((d) => setArticles(d.data))
+				.catch((e) => alert("Cloud not load articles"));
+		}
 	}, [country, search]);
+
 	return articles;
 }
 
 // Helper function to return the correct search parameters
 function getSearch(search: string) {
-	return search.length > 0 ? `&search=${search}` : "";
+	return search.length > 0 ? `&search=${encodeURIComponent(search)}` : "";
 }
 
 export default function Home() {
-	const history = useHistory();
+	const history: any = useHistory();
+	const location: any = useLocation();
 
 	// User input
 	const [country, setCountry] = useState("AU");
 	const [search, setSearch] = useState("");
+	const [voice, setVoice] = useState({
+		code: getVoice("code", "AU"),
+		name: getVoice("name", "A"),
+	});
+
+	// Get state of voice over
+	function getVoice(type: string, result: string) {
+		if (location.state) return location.state[type] ? location.state[type] : result;
+		return result;
+	}
 
 	// Get articles, set current article, slide and animation
 	const articles: IArticle[] = useArticles(country, search);
+	const [loading, setLoading] = useState(true);
 	const [currentArticle, setCurrentArticle] = useState(articles[0]);
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const [animateVisible, setAnimateVisible] = useState(false);
@@ -64,10 +86,14 @@ export default function Home() {
 	// Respond to articles changing
 	useEffect(() => {
 		cleanUp();
-		// Set the current slide to 0
-		setCurrentSlide(0);
 		// Animate articles in/out
 		setAnimateVisible(articles.length > 0);
+		// Set the current slide to 0 if articles are set
+		setCurrentSlide(0);
+		// Set the current article
+		if (articles.length > 0) {
+			setCurrentArticle(articles[currentSlide!]);
+		}
 	}, [articles]);
 
 	// Respond to slide changing
@@ -76,7 +102,7 @@ export default function Home() {
 		// Remove audio files
 		cleanUpAudio();
 		// Set the current article
-		setCurrentArticle(articles[currentSlide]);
+		setCurrentArticle(articles[currentSlide!]);
 	}, [currentSlide]);
 
 	// Respond to article changing
@@ -107,8 +133,13 @@ export default function Home() {
 
 	// Convert text to audio
 	async function textToSpeech(text: string) {
-		let response = await axios.get(`./api/voice/get/${text}`);
-		setAudio(response.data);
+		// let response = await axios.get(`./api/voice/get/${text}`);
+		let response = await axios.get(`./api/voice/get/en-${voice.code}/${voice.name}/${encodeURI(text)}`);
+		if (response.status == 200) {
+			setAudio(response.data);
+		} else {
+			toast.error("Could not play audio");
+		}
 	}
 
 	// Delete audio file
@@ -120,14 +151,37 @@ export default function Home() {
 
 	function handleKeyPress(e: any) {
 		if (e.key == "Enter") {
-			setSearch(e.target.value);
+			handleSearch(e.target.value);
 		}
-		// console.log(e.target.value);
+	}
+
+	function handleSearch(value: string) {
+		setAnimateVisible(false);
+		setSearch(value);
+	}
+
+	// Render articels and return an error if they fail to load
+	function renderArticles() {
+		if (Array.isArray(articles)) {
+			return articles.map((article: IArticle, index: number) => {
+				return (
+					<Slide key={index} index={index}>
+						<Article key={article.title} article={article} />
+					</Slide>
+				);
+			});
+		} else {
+			if (loading) {
+				setLoading(false);
+				toast.error("Could not load articles");
+			}
+			return;
+		}
 	}
 
 	return (
 		<div className="home">
-			<Header changeVoice={() => {}} />
+			<Header displayBack={false} changeVoice={(code, name) => setVoice({ code: code, name: name })} />
 			<div className="content">
 				<div className="auto-play">
 					<FormControlLabel
@@ -151,10 +205,9 @@ export default function Home() {
 					</div>
 					<div className="search">
 						<div className="text">Keywords:</div>
-						<TextBox placeholder="i.e. Technology" onBlur={(e) => setSearch(e.target.value)} onKeyPress={(e) => handleKeyPress(e)} />
+						<TextBox placeholder="i.e. Technology" onKeyPress={(e) => handleKeyPress(e)} />
 					</div>
 				</div>
-
 				<div className="carousel-container">
 					<Animated
 						animationIn="fadeInUp"
@@ -169,23 +222,16 @@ export default function Home() {
 							visibleSlides={1}
 							currentSlide={currentSlide}
 							dragEnabled={false}>
-							<Slider>
-								{articles.map((article: IArticle, index: number) => {
-									const removeTags = document.createElement("div");
-									removeTags.innerHTML = article.description;
-									article.description = removeTags.textContent!;
-									return (
-										<Slide key={index} index={index}>
-											<Article key={article.title} article={article} />
-										</Slide>
-									);
-								})}
-							</Slider>
+							<Slider>{loading ? renderArticles() : <></>}</Slider>
 						</CarouselProvider>
-						<div className="button-container">
-							<SearchIcon style={{ color: "#ffffff" }} />
-							<SearchButton onClick={() => routeExplore()}>Learn More</SearchButton>
-						</div>
+						{articles.length > 0 ? (
+							<div className="button-container">
+								<SearchIcon style={{ color: "#ffffff" }} />
+								<SearchButton onClick={() => routeExplore()}>Explore This Story</SearchButton>
+							</div>
+						) : (
+							<></>
+						)}
 					</Animated>
 				</div>
 				{audio ? (
@@ -201,23 +247,23 @@ export default function Home() {
 					<></>
 				)}
 			</div>
-
 			<Footer
-				onPrevious={() => setCurrentSlide(previousSlide(currentSlide))}
-				onNext={() => setCurrentSlide(nextSlide(currentSlide, articles.length))}
+				onPrevious={() => setCurrentSlide(previousSlide(currentSlide!))}
+				onNext={() => setCurrentSlide(nextSlide(currentSlide!, articles.length))}
 				onToggle={() => toggle()}
 				playing={playing}
 				audio={audio}
 				progress={progress}
 				duration={duration}
 			/>
+			<ToastContainer />
 		</div>
 	);
 
 	// Go to the explore page
 	function routeExplore() {
 		const title = currentArticle ? currentArticle.title : articles[0].title;
-		history.push({ pathname: "/explore", state: { title: title } });
+		history.push({ pathname: "/explore", state: { title: title, code: voice.code, name: voice.name } });
 	}
 
 	// Toggle the playing state of the audio file
@@ -234,7 +280,7 @@ export default function Home() {
 			}
 			// Otherwise set the new current article, which will fetch new speech content
 		} else {
-			setCurrentArticle(articles[currentSlide]);
+			setCurrentArticle(articles[currentSlide!]);
 		}
 	}
 
@@ -245,7 +291,7 @@ export default function Home() {
 
 	// Play the next article
 	function autoPlayNext() {
-		setCurrentSlide(nextSlide(currentSlide, articles.length));
+		setCurrentSlide(nextSlide(currentSlide!, articles.length));
 	}
 
 	// Halt playing

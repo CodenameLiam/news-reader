@@ -52,8 +52,6 @@ export default function Footer(props: IFooter) {
 
 	function getTime(seconds: number) {
 		return moment().startOf("day").seconds(seconds).format("mm:ss");
-		// return moment.duration(seconds, "seconds").humanize();
-		// return time
 	}
 
 	function getIcon() {

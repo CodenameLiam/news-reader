@@ -3,12 +3,15 @@
 	justify-content: center;
 	position: relative;
 
+	.title {
+		font-size: 2rem;
+		font-weight: 200;
+	}
+
 	padding: 2rem;
 	color: #ffffff;
 	background-color: #1c1e26;
 	text-align: center;
-	font-size: 2rem;
-	font-weight: 200;
 
 	b {
 		font-weight: 400;
@@ -22,10 +25,21 @@
 		height: 2rem;
 	}
 
-	.settings {
+	.settings-button {
 		position: absolute;
 		padding: 2rem;
 		right: 0px;
+		top: 10px;
+
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	.back-button {
+		position: absolute;
+		padding: 2rem;
+		left: 0px;
 		top: 10px;
 
 		&:hover {
@@ -39,9 +53,121 @@
 			width: 1.5rem;
 			height: 1.5rem;
 		}
-		.settings {
+		.settings-button {
 			padding: 1rem;
 			top: 21px;
+		}
+	}
+}
+
+.voice-entry {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 0.5rem;
+
+	audio {
+		&:focus {
+			outline: none;
+		}
+	}
+
+	.select {
+		margin: auto 0rem;
+		display: flex;
+		width: 12rem;
+
+		span {
+			margin-left: 1rem;
+		}
+
+		&:hover {
+			cursor: pointer;
+		}
+	}
+}
+
+.settings-container {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(255, 255, 255, 0.5);
+	z-index: 1;
+	left: 0;
+	top: 0;
+
+	.animated {
+		position: absolute;
+		background: #ffffff;
+		color: #1c1e26;
+
+		text-align: center;
+		z-index: 2;
+		margin: auto;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		max-width: 40rem;
+		max-height: 48rem;
+		border: 1px solid #dedede;
+		border-radius: 10px;
+		box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+
+		.settings {
+			padding: 1rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			width: 100%;
+		}
+
+		.buttons {
+			display: flex;
+			justify-content: space-evenly;
+			padding: 1rem;
+			button {
+				width: 17rem;
+			}
+		}
+
+		.input {
+			height: 34rem;
+		}
+
+		.country-select {
+			padding-top: 0rem;
+			margin-bottom: 2rem;
+			.text {
+				margin: auto 0rem;
+			}
+
+			display: flex;
+			justify-content: center;
+
+			.flag-select {
+				padding: 0rem;
+
+				button {
+					outline: none;
+				}
+
+				ul {
+					font-size: 14px;
+					box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+					border: 1px solid #dedede;
+					border-radius: 10px;
+					padding: 0.5rem;
+
+					li {
+						border-radius: 4px;
+						transition: all 0.2s;
+					}
+				}
+
+				.flag-select__option__label {
+					font-family: "Poppins", sans-serif;
+				}
+			}
 		}
 	}
 }

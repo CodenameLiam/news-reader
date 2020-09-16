@@ -3,3 +3,5 @@
 
 # Cloud credentials
 /server/speech-synthesizer.json*
+
+.vscode/

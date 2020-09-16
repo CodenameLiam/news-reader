@@ -1,0 +1,62 @@
+.explore {
+	.explore-headline {
+		text-align: center;
+		padding-top: 2rem;
+		font-size: 1.2rem;
+		max-width: 60rem;
+		margin: auto;
+	}
+
+	.article {
+		position: relative;
+		max-height: 50rem;
+
+		.container {
+			height: 40rem;
+		}
+
+		.media {
+			text-align: center;
+			padding: 1rem 0rem;
+		}
+
+		.play-button {
+			position: absolute;
+			position: absolute;
+			bottom: -20px;
+			right: -20px;
+		}
+
+		.timer {
+			display: flex;
+			justify-content: space-between;
+			padding: 1rem 0rem;
+			width: 100%;
+			max-width: 60rem;
+			margin: auto;
+
+			.progress-bar {
+				width: 80%;
+				margin: auto;
+				height: 4px;
+				border-radius: 10px;
+				background-color: #dedede;
+				// border: 2px solid #1c1e26;
+			}
+
+			.progress-complete {
+				background-color: #1c1e26;
+				width: 0%;
+				height: 100%;
+				border-radius: 10rem;
+			}
+		}
+
+		.author {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 85%;
+		}
+	}
+}
